@@ -24,8 +24,8 @@
 ---USAGE---
 	Enter this command
 	linuxtune <audioFile.mp3/mp2/ogg/wav>
-	Also by pressing the 'p' you can pause the audio. Also You can seek the audio by pressing the left and right arrow by 5 seconds.
 	(change audiofile with the actual file name and mp3/mp2/ogg with the actual file type)
+	Also by pressing the 'p' you can pause the audio. Also You can seek the audio by pressing the left and right arrow by 5 seconds. 
 ---LINCENSE---
 	This project is under the GNU General Public License v3.0. See the LICENSE file for more details.
 	
