@@ -25,4 +25,7 @@
 	Enter this command
 	linuxtune <audioFile.mp3/mp2/ogg/wav>
 	(change audiofile with the actual file name and mp3/mp2/ogg with the actual file type)
+---LINCENSE---
+	This project is under the GNU General Public License v3.0. See the LICENSE file for more details.
+	
 	
