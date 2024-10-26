@@ -1,4 +1,4 @@
-# Linux tune command line edition
+# Linuxtune
 
 ----DEPENDENCIES----
 	automake
@@ -20,9 +20,9 @@
 	4. sudo make install
 ---INFO---
 	Linux tune is a command line based, lightweight open source audio player
-	made for linux. This version supports mp3, ogg and mp2 files.
+	made for linux. This version supports mp3, ogg, mp2 and wav files.
 ---USAGE---
 	Enter this command
-	linuxtune <audioFile.mp3/mp2/ogg>
+	linuxtune <audioFile.mp3/mp2/ogg/wav>
 	(change audiofile with the actual file name and mp3/mp2/ogg with the actual file type)
 	
