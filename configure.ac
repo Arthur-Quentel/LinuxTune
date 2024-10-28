@@ -5,18 +5,31 @@ AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 
 AC_PROG_CC                          
 
-PKG_CHECK_MODULES(VORBIS, [vorbis vorbisfile])
-PKG_CHECK_MODULES(OGG, [ogg])
-PKG_CHECK_MODULES(MPG123, [libmpg123])
-PKG_CHECK_MODULES(SDL2, [sdl2])
-
-
-AC_MSG_CHECKING([for required libraries])
-if test "x$VORBIS_LIBS" = "x" || test "x$OGG_LIBS" = "x" || test "x$MPG123_LIBS" = "x" || test "x$SDL2_LIBS" = "x"; then
-    AC_MSG_ERROR([Some required libraries are missing.])
-else
-    AC_MSG_RESULT([all required libraries found])
+PKG_CHECK_MODULES([vorbis], [vorbis >= 1.3.6], [have_vorbis=yes], [have_vorbis=0])
+if test "x$have_vorbis" = "xno"; then
+    AC_MSG_ERROR([Vorbis library is required but not found])
 fi
+
+PKG_CHECK_MODULES([vorbisfile], [vorbisfile >= 1.3.6], [have_vorbisfile=yes], [have_vorbisfile=0])
+if test "x$have_vorbisfile" = "xno"; then
+    AC_MSG_ERROR([Vorbisfile library is required but not found])
+fi
+
+PKG_CHECK_MODULES([ogg], [ogg >= 1.3.2], [have_ogg=yes], [have_ogg=0])
+if test "x$have_ogg", "xno"; then
+    AC_MSG_ERROR([Ogg library required but not found])
+fi
+
+PKG_CHECK_MODULES([libmpg123], [libmpg123 >= 1.26.4], [have_libmpg123=yes], [have_libmpg123=0])
+if test "x$have_libmpg123", "xno"; then
+    AC_MSG_ERROR([Mpg123 libary is required but not found])
+fi
+
+PKG_CHECK_MODULES([sdl2], [sdl2 >= 2.0], [have_sdl2=yes], [have_sdl2=0])
+if test "x$have_sdl2", "xno"; then
+    AC_MSG_ERROR([SDL2 libary is required but not found])
+fi
+
 
 AC_SUBST(VORBIS_CFLAGS)
 AC_SUBST(VORBIS_LIBS)
