@@ -1,3 +1,4 @@
+
 void audio_callback(void *userdata, Uint8 *stream, int len) {
     AudioData *audio_data = (AudioData *)userdata;
     size_t done;
@@ -43,7 +44,7 @@ void audio_callback(void *userdata, Uint8 *stream, int len) {
     }
 }
 
-void print_audio_progress(AudioData *audio_data, SDL_AudioSpec wav_spec) {
+void print_audio_progress(AudioData *audio_data, SDL_AudioSpec* wav_spec) {
     double current_time = 0.0;
 
     if (audio_data->is_mp3 || audio_data->is_mp2) {
@@ -57,7 +58,7 @@ void print_audio_progress(AudioData *audio_data, SDL_AudioSpec wav_spec) {
         current_time = (double)current_sample / sample_rate;
         audio_data->total_duration = (double)total_samples / sample_rate;
     } else if (audio_data->is_wav) {
-        current_time = (double)audio_data->wav_position / (wav_spec.freq * wav_spec.channels * 2);
+        current_time = (double)audio_data->wav_position / (wav_spec->freq * wav_spec->channels * 2);
     } else {
         current_time = ov_time_tell(&audio_data->vorbis_file);
     }
