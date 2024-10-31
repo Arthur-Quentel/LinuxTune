@@ -1,6 +1,8 @@
 # Linuxtune
 
 ----DEPENDENCIES----
+	GNU compiler colection (gcc)
+	libasound2 (should be already preinstalled)
 	automake
 	autoconf
 	make
