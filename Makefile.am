@@ -4,7 +4,7 @@ bin_PROGRAMS = linuxtune
 linuxtune_SOURCES = src/main.c
 
 AM_CFLAGS = -Wall 
-AM_LDFLAGS =  -lvorbisfile -lvorbis -logg -lmpg123 -lSDL2 
+AM_LDFLAGS =  -lvorbisfile -lmpg123 -lSDL2 
 
 clean-local:
 	rm -d -r autom4te.cache/
