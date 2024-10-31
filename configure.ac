@@ -15,11 +15,6 @@ if test "x$have_vorbisfile" = "xno"; then
     AC_MSG_ERROR([Vorbisfile library is required but not found])
 fi
 
-PKG_CHECK_MODULES([ogg], [ogg >= 1.3.2], [have_ogg=yes], [have_ogg=0])
-if test "x$have_ogg", "xno"; then
-    AC_MSG_ERROR([Ogg library required but not found])
-fi
-
 PKG_CHECK_MODULES([libmpg123], [libmpg123 >= 1.26.4], [have_libmpg123=yes], [have_libmpg123=0])
 if test "x$have_libmpg123", "xno"; then
     AC_MSG_ERROR([Mpg123 libary is required but not found])
