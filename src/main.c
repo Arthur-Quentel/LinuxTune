@@ -52,11 +52,11 @@ int kbhit() {
 
 #include "audioHandling.c"
 
-void seek_audio(AudioData *audio_data, double offset, SDL_AudioSpec wav_spec) {
+void seek_audio(AudioData *audio_data, double offset, SDL_AudioSpec* wav_spec) {
     if (audio_data->is_mp3 || audio_data->is_mp2) {
         mpg123_seek(audio_data->mpg123_handle, offset * 44100, SEEK_CUR);
     } else if (audio_data->is_wav) {
-        Uint32 byte_offset = (Uint32)(offset * wav_spec.freq * wav_spec.channels * 2);
+        Uint32 byte_offset = (Uint32)(offset * wav_spec->freq * wav_spec->channels * 2);
 
         if (offset > 0) {
             if (audio_data->wav_position + byte_offset > audio_data->wav_length) {
@@ -96,14 +96,14 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    SDL_AudioSpec wav_spec;
-    memset(&wav_spec, 0, sizeof(SDL_AudioSpec));
-    wav_spec.format = AUDIO_FORMAT;
-    wav_spec.samples = 4096;
-    wav_spec.callback = audio_callback;
-    wav_spec.userdata = &audio_data;
+    SDL_AudioSpec* wav_spec = (SDL_AudioSpec *)malloc(sizeof(SDL_AudioSpec));
+    memset(wav_spec, 0, sizeof(SDL_AudioSpec));
+    wav_spec->format = AUDIO_FORMAT;
+    wav_spec->samples = 4096;
+    wav_spec->callback = audio_callback;
+    wav_spec->userdata = &audio_data;
 
-    audio_data.stream = (Uint8 *)malloc(wav_spec.samples * sizeof(Uint8));
+    audio_data.stream = (Uint8 *)malloc(wav_spec->samples * sizeof(Uint8));
 
     const char *ext = strrchr(filename, '.');
 
@@ -115,6 +115,8 @@ int main(int argc, char *argv[]) {
         if (mpg123_open(audio_data.mpg123_handle, filename) != MPG123_OK) {
             fprintf(stderr, "Could not open MP3/MP2 file: %s\n", filename);
             mpg123_delete(audio_data.mpg123_handle);
+            free(audio_data.stream);
+            free(wav_spec);
             return 1;
         }
 
@@ -126,8 +128,8 @@ int main(int argc, char *argv[]) {
             return 1;
         }
 
-        wav_spec.freq = rate;
-        wav_spec.channels = channels;
+        wav_spec->freq = rate;
+        wav_spec->channels = channels;
         audio_data.is_mp3 = (strcmp(ext, ".mp3") == 0) ? 1 : 0;
         audio_data.is_mp2 = (strcmp(ext, ".mp2") == 0) ? 1 : 0;
 
@@ -142,14 +144,16 @@ int main(int argc, char *argv[]) {
     } else if (ext && strcmp(ext, ".ogg") == 0) {
         if (ov_fopen(filename, &audio_data.vorbis_file) < 0) {
             fprintf(stderr, "Could not open Ogg Vorbis file: %s\n", filename);
+            free(audio_data.stream);
+            free(wav_spec);
             return 1;
         }
 
         vorbis_info *info = ov_info(&audio_data.vorbis_file, -1);
         audio_data.total_duration = ov_time_total(&audio_data.vorbis_file, -1);
 
-        wav_spec.freq = info->rate;
-        wav_spec.channels = info->channels;
+        wav_spec->freq = info->rate;
+        wav_spec->channels = info->channels;
         audio_data.is_mp3 = 0;
         audio_data.is_mp2 = 0;
 
@@ -163,32 +167,36 @@ int main(int argc, char *argv[]) {
         printf("Bitrate: %ld\n", ov_bitrate(&audio_data.vorbis_file, -1) / 1000);
 
     } else if (ext && strcmp(ext, ".wav") == 0) {
-        if (SDL_LoadWAV(filename, &wav_spec, &audio_data.wav_buffer, &audio_data.wav_length) == NULL) {
+        if (SDL_LoadWAV(filename, wav_spec, &audio_data.wav_buffer, &audio_data.wav_length) == NULL) {
             fprintf(stderr, "Could not open WAV file: %s, SDL Error: %s\n", filename, SDL_GetError());
+            free(audio_data.stream);
+            free(wav_spec);
             return 1;
         }
 
-        wav_spec.callback = audio_callback;
-        wav_spec.userdata = &audio_data;
+        wav_spec->callback = audio_callback;
+        wav_spec->userdata = &audio_data;
         audio_data.is_wav = 1;
         audio_data.wav_position = 0;
-        audio_data.total_duration = (double)audio_data.wav_length / (wav_spec.freq * wav_spec.channels * 2);
+        audio_data.total_duration = (double)audio_data.wav_length / (wav_spec->freq * wav_spec->channels * 2);
 
         printf("Playing WAV file: %s\n", filename);
-        printf("Sample rate: %d Hz\n", wav_spec.freq);
-        if (wav_spec.channels == 1) {
+        printf("Sample rate: %d Hz\n", wav_spec->freq);
+        if (wav_spec->channels == 1) {
             printf("Mono\n");
         } else {
             printf("Stereo\n");
         }
     } else {
         fprintf(stderr, "Unsupported file format: %s\n", filename);
+        free(wav_spec);
         free(audio_data.stream);
         return 1;
     }
 
-    if (SDL_OpenAudio(&wav_spec, NULL) < 0) {
+    if (SDL_OpenAudio(wav_spec, NULL) < 0) {
         fprintf(stderr, "Could not open audio: %s\n", SDL_GetError());
+        free(wav_spec);
         free(audio_data.stream);
         if (audio_data.is_mp3 || audio_data.is_mp2) {
             mpg123_delete(audio_data.mpg123_handle);
@@ -235,6 +243,7 @@ int main(int argc, char *argv[]) {
         ov_clear(&audio_data.vorbis_file);
     }
 
+    free(wav_spec);
     free(audio_data.stream);
 
     printf("\033[?25h");
