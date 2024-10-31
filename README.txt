@@ -6,9 +6,7 @@
 	make
 	mpg123 lib
 	SDL2 lib
-	vorbis lib
 	vorbisfile lib
-	ogg lib
 ---BUILD---
 	Building the program is pretty easy. Here is the list of the commands:
 	1. chmod +x autogen.sh 
