@@ -8,3 +8,5 @@ AM_LDFLAGS =  -lvorbisfile -lmpg123 -lSDL2
 
 clean-local:
 	rm -rf autom4te.cache/
+	rm -f src/*.o
+
