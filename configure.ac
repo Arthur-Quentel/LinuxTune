@@ -16,12 +16,12 @@ if test "x$have_vorbisfile" = "xno"; then
 fi
 
 PKG_CHECK_MODULES([libmpg123], [libmpg123 >= 1.26.4], [have_libmpg123=yes], [have_libmpg123=0])
-if test "x$have_libmpg123", "xno"; then
+if test "x$have_libmpg123" = "xno"; then
     AC_MSG_ERROR([Mpg123 libary is required but not found])
 fi
 
 PKG_CHECK_MODULES([sdl2], [sdl2 >= 2.0], [have_sdl2=yes], [have_sdl2=0])
-if test "x$have_sdl2", "xno"; then
+if test "x$have_sdl2" = "xno"; then
     AC_MSG_ERROR([SDL2 libary is required but not found])
 fi
 
