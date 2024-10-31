@@ -7,4 +7,4 @@ AM_CFLAGS = -Wall
 AM_LDFLAGS =  -lvorbisfile -lmpg123 -lSDL2 
 
 clean-local:
-	rm -d -r autom4te.cache/
+	rm -rf autom4te.cache/
