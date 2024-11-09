@@ -4,10 +4,9 @@
 #include <vorbis/vorbisfile.h>
 #include <mpg123.h>
 #include <SDL2/SDL.h>
-#include <time.h>
 #include <termios.h>
 #include <unistd.h>
-#include <sys/select.h>
+
 
 #define AUDIO_FORMAT AUDIO_S16SYS
 #define SEEK_SECONDS 5
